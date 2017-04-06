@@ -40,6 +40,13 @@ def uri_audio(id=None, uri=None):
 
     return cue
 
+def uri_video(id=None, uri=None):
+    cue = gst_media(id=id, pipeline=compose_video_pipeline('UriVideoInput'))
+
+    if uri is not None:
+        cue.media.element('UriVideoInput').uri = uri
+
+    return cue
 
 def capture_audio(id=None):
     return gst_media(id=id, pipeline=compose_pipeline('AutoSrc'))
@@ -49,8 +56,15 @@ def compose_pipeline(input_element):
     return (input_element,) +\
            tuple(config['Gst']['Pipeline'].replace(' ', '').split(','))
 
+def compose_video_pipeline(input_element):
+    #TODO Cette fonction sert à rien maintenant, mais c'est ici que les prefs Gstremer seront injectées
+    return ('UriVideoInput', 'AutoVideoSink')
+
+
 
 def register_factories():
     CueFactory.register_factory('MediaCue', gst_media)
     CueFactory.register_factory('URIAudioCue', uri_audio)
     CueFactory.register_factory('CaptureAudioCue', capture_audio)
+    CueFactory.register_factory('URIVideoCue', uri_video)
+

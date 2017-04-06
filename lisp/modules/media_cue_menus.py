@@ -17,6 +17,8 @@
 # You should have received a copy of the GNU General Public License
 # along with Linux Show Player.  If not, see <http://www.gnu.org/licenses/>.
 
+from lisp.modules.gst_backend.gi_repository import Gst
+
 import os
 
 from PyQt5.QtCore import QStandardPaths, Qt
@@ -40,6 +42,12 @@ class MediaCueMenus(Module):
             self.add_uri_audio_media_cue,
             category='Media cues',
             shortcut='CTRL+M')
+        MainWindow().register_cue_menu_action(
+            translate('MediaCueMenus', 'Video cue (from file)'),
+            self.add_uri_video_media_cue,
+            category='Media cues',
+            shortcut='CTRL+V'
+        )
 
     @staticmethod
     def add_uri_audio_media_cue():
@@ -66,6 +74,37 @@ class MediaCueMenus(Module):
         # Create media cues, and add them to the Application cue_model
         for file in files:
             cue = CueFactory.create_cue('URIAudioCue', uri='file://' + file)
+            # Use the filename without extension as cue name
+            cue.name = os.path.splitext(os.path.basename(file))[0]
+            Application().cue_model.add(cue)
+
+        QApplication.restoreOverrideCursor()
+
+    @staticmethod
+    def add_uri_video_media_cue():
+        """Add video MediaCue(s) from user-selected files"""
+
+        if get_backend() is None:
+            QMessageBox.critical(MainWindow(), 'Error', 'Backend not loaded')
+            return
+
+        # Default path to system "video" folder
+        path = QStandardPaths.writableLocation((QStandardPaths.MoviesLocation))
+
+        # Get the backend extensions and create a filter for the Qt file-dialog
+        extensions = get_backend().supported_extensions()
+        filters = qfile_filters(extensions, anyfile=False)
+        # Display a file-dialog for the user to choose the media-files
+        files, _ = QFileDialog.getOpenFileNames(MainWindow(),
+                                                translate('MediaCueMenus',
+                                                          'Select media files'),
+                                                path, filters)
+
+        QApplication.setOverrideCursor(QCursor(Qt.WaitCursor))
+
+        # Create media cues, and add them to the Application cue_model
+        for file in files:
+            cue = CueFactory.create_cue('URIVideoCue', uri='file://' + file)
             # Use the filename without extension as cue name
             cue.name = os.path.splitext(os.path.basename(file))[0]
             Application().cue_model.add(cue)
