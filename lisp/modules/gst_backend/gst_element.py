@@ -17,9 +17,11 @@
 # You should have received a copy of the GNU General Public License
 # along with Linux Show Player.  If not, see <http://www.gnu.org/licenses/>.
 
-from lisp.backend.media_element import MediaElement, ElementType
+from lisp.backend.media_element import MediaElement, ElementType, MediaType
 from lisp.core.has_properties import Property
+from lisp.application import Application
 
+from lisp.modules.gst_backend.gi_repository import GstVideo
 
 class GstProperty(Property):
 
@@ -75,6 +77,9 @@ class GstMediaElement(MediaElement):
         """Called before Media pause"""
 
     def play(self):
+        if(self.ElementType == ElementType.Output and
+           self.MediaType == MediaType.Video):
+            GstVideo.VideoOverlay.set_window_handle(self.auto_sink, Application().render_window_id)
         """Called before Media play"""
 
     def dispose(self):

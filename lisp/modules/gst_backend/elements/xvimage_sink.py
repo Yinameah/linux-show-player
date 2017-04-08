@@ -24,15 +24,16 @@ from lisp.modules.gst_backend.gi_repository import Gst
 from lisp.modules.gst_backend.gst_element import GstMediaElement
 
 
-class AutoVideoSink(GstMediaElement):
+
+class XvimageSink(GstMediaElement):
     ElementType = ElementType.Output
-    MediaType = MediaType.Audio
+    MediaType = MediaType.Video
     Name = QT_TRANSLATE_NOOP('MediaElementName', 'System Out')
 
     def __init__(self, pipe):
         super().__init__()
 
-        self.auto_sink = Gst.ElementFactory.make('autovideosink', 'sink')
+        self.auto_sink = Gst.ElementFactory.make('xvimagesink', 'sink')
         pipe.add(self.auto_sink)
 
     def sink(self):

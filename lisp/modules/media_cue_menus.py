@@ -48,6 +48,17 @@ class MediaCueMenus(Module):
             category='Media cues',
             shortcut='CTRL+V'
         )
+        # TODO Remove this, only for test purposes
+        MainWindow().register_cue_menu_action(
+            'Test event',
+            self.test_action,
+            shortcut='CTRL+T'
+        )
+    def test_action(self):
+        from PyQt5.QtWidgets import QWidget
+        self.video_window = QWidget()
+        self.video_window.setWindowTitle('Render !')
+        self.video_window.show()
 
     @staticmethod
     def add_uri_audio_media_cue():

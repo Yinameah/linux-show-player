@@ -12,4 +12,4 @@ gi.require_version('GstPbutils', '1.0')
 gi.require_version('GstApp', '1.0')
 
 # noinspection PyUnresolvedReferences
-from gi.repository import Gst, GstPbutils, GObject, GstApp
+from gi.repository import Gst, GstPbutils, GObject, GstApp, GstVideo

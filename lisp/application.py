@@ -34,6 +34,7 @@ from lisp.cues.cue_model import CueModel
 from lisp.ui import elogging
 from lisp.ui.layoutselect import LayoutSelect
 from lisp.ui.mainwindow import MainWindow
+from lisp.ui.renderwindow import QRenderWindow
 from lisp.ui.settings.app_settings import AppSettings
 from lisp.ui.settings.pages.app_general import AppGeneral
 from lisp.ui.settings.pages.cue_app_settings import CueAppSettings
@@ -42,6 +43,8 @@ from lisp.ui.settings.pages.cue_app_settings import CueAppSettings
 class Application(metaclass=Singleton):
     def __init__(self):
         self._mainWindow = MainWindow()
+        self._render_window = QRenderWindow()
+        self._render_window_id = self._render_window.winId()
         self._app_conf = {}
         self._layout = None
         self._memento_model = None
@@ -58,6 +61,11 @@ class Application(metaclass=Singleton):
 
         # Show the mainWindow maximized
         self._mainWindow.showMaximized()
+
+    @property
+    def render_window_id(self):
+        """:rtype: sip.voidptr object"""
+        return self._render_window_id
 
     @property
     def layout(self):

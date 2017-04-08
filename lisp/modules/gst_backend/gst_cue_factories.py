@@ -58,7 +58,7 @@ def compose_pipeline(input_element):
 
 def compose_video_pipeline(input_element):
     #TODO Cette fonction sert à rien maintenant, mais c'est ici que les prefs Gstremer seront injectées
-    return ('UriVideoInput', 'AutoVideoSink')
+    return ('UriVideoInput', 'XvimageSink')
 
 
 
